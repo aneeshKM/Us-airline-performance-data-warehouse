@@ -1,0 +1,27 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.idea/
+.vscode/
+.DS_Store
+
+# Airflow runtime state
+airflow/logs/
+airflow/plugins/
+airflow/config/
+airflow/.airflow/
+
+# Downloaded source data and generated reports
+data/raw/*
+!data/raw/.gitkeep
+reports/*.json
+reports/*.md
+!reports/.gitkeep

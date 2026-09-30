@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "us-airline-performance-warehouse"
+version = "0.1.0"
+description = "Incremental BTS on-time performance warehouse for Snowflake"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Aneesh Mokashi"}]
+dependencies = [
+  "snowflake-connector-python==3.18.0",
+  "requests==2.32.5",
+  "python-dotenv==1.1.1",
+  "tenacity==9.1.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2", "pytest-cov==7.0.0", "ruff==0.13.2"]
+
+[project.scripts]
+airline-warehouse = "airline_warehouse.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["integration: requires a configured Snowflake account and network access"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
