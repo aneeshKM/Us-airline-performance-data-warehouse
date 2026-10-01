@@ -57,7 +57,7 @@ class Settings:
             raise ValueError("PIPELINE_START_MONTH must not be after PIPELINE_END_MONTH")
 
     @classmethod
-    def from_env(cls, *, require_credentials: bool = True) -> "Settings":
+    def from_env(cls, *, require_credentials: bool = True) -> Settings:
         load_dotenv()
         account = os.getenv("SNOWFLAKE_ACCOUNT", "")
         user = os.getenv("SNOWFLAKE_USER", "")
@@ -106,4 +106,3 @@ class Settings:
             "role": self.role,
             "application": "us_airline_performance_warehouse",
         }
-

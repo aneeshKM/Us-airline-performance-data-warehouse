@@ -1,11 +1,11 @@
 BEGIN;
 
 DELETE FROM {{database}}.{{analytics_schema}}.FACT_FLIGHTS TARGET
-WHERE TARGET.SOURCE_MONTH = TO_DATE('{{source_month}}')
+WHERE TARGET.SOURCE_MONTH = TO_DATE('{{source_month}}-01', 'YYYY-MM-DD')
   AND NOT EXISTS (
     SELECT 1
     FROM {{database}}.{{staging_schema}}.FLIGHTS_CLEAN SOURCE
-    WHERE SOURCE.SOURCE_MONTH = TO_DATE('{{source_month}}')
+    WHERE SOURCE.SOURCE_MONTH = TO_DATE('{{source_month}}-01', 'YYYY-MM-DD')
       AND SOURCE.FLIGHT_ID = TARGET.FLIGHT_KEY
   );
 
@@ -25,7 +25,7 @@ USING (
     ON O.AIRPORT_ID = S.ORIGIN_AIRPORT_ID
   JOIN {{database}}.{{analytics_schema}}.DIM_AIRPORT D
     ON D.AIRPORT_ID = S.DESTINATION_AIRPORT_ID
-  WHERE S.SOURCE_MONTH = TO_DATE('{{source_month}}')
+  WHERE S.SOURCE_MONTH = TO_DATE('{{source_month}}-01', 'YYYY-MM-DD')
 ) SOURCE
 ON TARGET.FLIGHT_KEY = SOURCE.FLIGHT_KEY
 WHEN MATCHED THEN UPDATE SET

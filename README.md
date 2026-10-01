@@ -166,8 +166,33 @@ ORDER BY ON_TIME_PERCENTAGE DESC;
 
 ## Performance Results
 
-No benchmark numbers are committed before a real execution. After a successful warehouse run,
-generate the result artifacts directly from Snowflake:
+The current measured checkpoint contains all twelve 2024 source months. These values were
+generated from Snowflake metadata on 2026-10-01 UTC; they are not estimates.
+
+| Metric | Measured result |
+|---|---:|
+| Flight fact rows | 7,079,060 |
+| Loaded months | 12 |
+| Airlines | 15 |
+| Airports | 348 |
+| Date dimension rows | 366 |
+| Normalized raw CSV bytes | 3,194,808,790 |
+| Duplicate natural keys removed | 0 |
+| Invalid source rows rejected | 1 |
+| Latest monthly runtime | 99.891 seconds |
+| Average monthly runtime | 96.859 seconds |
+| Airline mart query | 0.246 seconds |
+| Route mart query | 0.287 seconds |
+| Delay-cause mart query | 0.218 seconds |
+
+The rejected row is an August 2024 BTS record whose reporting flight number is null. Source,
+raw, staging, and fact reconciliation checks otherwise passed. The January idempotency test
+finished with 547,271 fact rows after both forced runs and zero new duplicates.
+
+The 24-month full-build benchmark and its runtime-reduction percentage remain unmeasured. They
+will not be claimed until 2023 is loaded and the destructive benchmark procedure is executed.
+
+Regenerate the result artifacts directly from Snowflake after future loads:
 
 ```bash
 airline-warehouse report \
@@ -177,7 +202,10 @@ airline-warehouse report \
 
 The generated table includes records, months, file bytes, duplicates, rejected rows, full and
 incremental runtimes, average monthly runtime, dimensions, and analytical query timings. A
-missing benchmark is written as `null` / `Not measured`, never as an estimate.
+missing benchmark is written as `null` / `Not measured`, never as an estimate. The current
+artifacts are committed at [`reports/pipeline_metrics.json`](reports/pipeline_metrics.json),
+[`reports/benchmark.md`](reports/benchmark.md), and
+[`reports/idempotency.json`](reports/idempotency.json).
 
 For the requested full-versus-incremental comparison, see
 [Benchmarking](docs/benchmarking.md). The reset command is deliberately guarded by

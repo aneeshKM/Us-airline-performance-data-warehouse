@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from time import perf_counter
-from typing import Any, Iterator
+from typing import Any
 
 from airline_warehouse.config import Settings
 from airline_warehouse.month import YearMonth

@@ -1,0 +1,21 @@
+{
+  "airflow_task_count": 10,
+  "airlines": 15,
+  "airports": 348,
+  "average_monthly_pipeline_seconds": 96.859,
+  "date_dimension_rows": 366,
+  "duplicates_removed": 0,
+  "full_load_seconds": null,
+  "generated_at": "2026-10-01T00:20:52.295652+00:00",
+  "incremental_load_seconds": 99.891,
+  "invalid_records": 1,
+  "months_processed": 12,
+  "query_performance": {
+    "airline_mart_query_seconds": 0.246,
+    "delay_mart_query_seconds": 0.218,
+    "route_mart_query_seconds": 0.287
+  },
+  "raw_file_bytes": 3194808790,
+  "records_processed": 7079060,
+  "runtime_reduction_percent": null
+}

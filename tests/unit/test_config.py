@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+import airline_warehouse.config as config_module
 from airline_warehouse.config import Settings, validate_identifier
 
 
@@ -19,9 +20,9 @@ def test_unsafe_identifier_is_rejected(value: str) -> None:
 
 
 def test_missing_credentials_are_reported(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(config_module, "load_dotenv", lambda: None)
     for name in ("SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_PASSWORD"):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.chdir(Path(__file__).parent)
     with pytest.raises(ValueError, match="SNOWFLAKE_ACCOUNT"):
         Settings.from_env()
-

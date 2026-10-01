@@ -1,7 +1,11 @@
 import zipfile
 from pathlib import Path
 
-from airline_warehouse.downloader import BtsDownloader, sha256_file
+from airline_warehouse.downloader import (
+    BtsDownloader,
+    _remove_unnamed_trailing_column,
+    sha256_file,
+)
 from airline_warehouse.month import YearMonth
 
 
@@ -28,3 +32,10 @@ def test_extracts_largest_non_readme_csv(tmp_path: Path) -> None:
     assert output_path.read_text() == "a,b\n1,2\n3,4\n"
     assert len(sha256_file(output_path)) == 64
 
+
+def test_removes_bts_empty_trailing_column_atomically(tmp_path: Path) -> None:
+    source = tmp_path / "flights.csv"
+    source.write_bytes(b'"Year","Origin",\r\n2024,"JFK",\r\n')
+    assert _remove_unnamed_trailing_column(source) is True
+    assert source.read_bytes() == b'"Year","Origin"\r\n2024,"JFK"\r\n'
+    assert _remove_unnamed_trailing_column(source) is False

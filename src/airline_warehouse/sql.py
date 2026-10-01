@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 from airline_warehouse.config import Settings
 
@@ -51,6 +52,8 @@ def split_sql_statements(script: str) -> Iterator[str]:
     """Split project SQL files, which intentionally contain no semicolons in literals."""
     for statement in script.split(";"):
         cleaned = statement.strip()
-        if cleaned:
+        executable_lines = [
+            line for line in cleaned.splitlines() if not line.lstrip().startswith("--")
+        ]
+        if any(line.strip() for line in executable_lines):
             yield cleaned
-

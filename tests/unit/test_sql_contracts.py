@@ -32,6 +32,11 @@ def test_raw_loader_replaces_only_the_requested_month() -> None:
         stage_prefix="2024-01/abc",
     )
     sql = render_sql("raw/load_month.sql", context)
-    assert "WHERE SOURCE_MONTH = TO_DATE('2024-01')" in sql
+    assert sql.startswith("USE SCHEMA AIRLINE_PERFORMANCE.RAW")
+    assert "WHERE SOURCE_MONTH = TO_DATE('2024-01-01', 'YYYY-MM-DD')" in sql
     assert "FORCE = TRUE" in sql
 
+
+def test_statement_splitter_ignores_trailing_comments() -> None:
+    statements = list(split_sql_statements("SELECT 1;\n-- instructions only\n"))
+    assert statements == ["SELECT 1"]

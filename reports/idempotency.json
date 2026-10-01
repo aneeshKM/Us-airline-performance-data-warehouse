@@ -1,0 +1,9 @@
+{
+  "source_month": "2024-01",
+  "first_run_id": "c6cfac41-4005-4b36-97f8-66272cd38ea9",
+  "second_run_id": "ac7efc58-4263-433a-9176-8fe036f79105",
+  "fact_rows_after_first_run": 547271,
+  "fact_rows_after_second_run": 547271,
+  "new_duplicates": 0,
+  "passed": true
+}

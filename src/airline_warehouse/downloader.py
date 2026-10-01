@@ -64,6 +64,8 @@ class BtsDownloader:
         else:
             LOGGER.info("Reusing local BTS files for %s", month)
 
+        if _remove_unnamed_trailing_column(csv_path):
+            LOGGER.info("Removed BTS unnamed trailing CSV column for %s", month)
         checksum = sha256_file(csv_path)
         return DownloadResult(
             source_month=str(month),
@@ -125,3 +127,37 @@ def sha256_file(path: Path) -> str:
             digest.update(chunk)
     return digest.hexdigest()
 
+
+def _remove_unnamed_trailing_column(path: Path) -> bool:
+    """Remove BTS's empty final CSV field so Snowflake can parse the header by name."""
+    with path.open("rb") as source:
+        header = source.readline()
+    if not _line_body(header).endswith(b","):
+        return False
+
+    temporary_path = path.with_suffix(".csv.normalize")
+    try:
+        with path.open("rb") as source, temporary_path.open("wb") as output:
+            for line_number, line in enumerate(source, start=1):
+                body, ending = _split_line_ending(line)
+                if not body.endswith(b","):
+                    raise ValueError(
+                        f"Expected an empty trailing BTS field on line {line_number} of {path}"
+                    )
+                output.write(body[:-1] + ending)
+        temporary_path.replace(path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+    return True
+
+
+def _line_body(line: bytes) -> bytes:
+    return _split_line_ending(line)[0]
+
+
+def _split_line_ending(line: bytes) -> tuple[bytes, bytes]:
+    if line.endswith(b"\r\n"):
+        return line[:-2], b"\r\n"
+    if line.endswith(b"\n"):
+        return line[:-1], b"\n"
+    return line, b""

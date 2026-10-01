@@ -14,7 +14,7 @@ class YearMonth:
             raise ValueError(f"Invalid BTS source month: {self.year:04d}-{self.month:02d}")
 
     @classmethod
-    def parse(cls, value: str) -> "YearMonth":
+    def parse(cls, value: str) -> YearMonth:
         try:
             year_text, month_text = value.strip().split("-", maxsplit=1)
             return cls(int(year_text), int(month_text))
@@ -29,7 +29,7 @@ class YearMonth:
     def compact(self) -> str:
         return f"{self.year:04d}{self.month:02d}"
 
-    def next(self) -> "YearMonth":
+    def next(self) -> YearMonth:
         if self.month == 12:
             return YearMonth(self.year + 1, 1)
         return YearMonth(self.year, self.month + 1)
@@ -47,4 +47,3 @@ def month_range(start: YearMonth, end: YearMonth) -> list[YearMonth]:
         result.append(current)
         current = current.next()
     return result
-

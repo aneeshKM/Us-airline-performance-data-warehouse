@@ -25,3 +25,6 @@ data/raw/*
 reports/*.json
 reports/*.md
 !reports/.gitkeep
+!reports/pipeline_metrics.json
+!reports/benchmark.md
+!reports/idempotency.json
